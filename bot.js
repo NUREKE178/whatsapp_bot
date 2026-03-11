@@ -54,6 +54,7 @@ function getGroup(id) {
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: { args: ['--no-sandbox', '--disable-setuid-sandbox'] }
+    headless: true,
 });
 
 client.on('qr', (qr) => qrcode.generate(qr, { small: true }));
