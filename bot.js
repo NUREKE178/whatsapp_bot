@@ -48,19 +48,33 @@ async function connectToWhatsApp() {
         markOnlineOnConnect: true // Желіде екенін көрсету
     });
 
-    sock.ev.on('connection.update', (update) => {
+    s    sock.ev.on('connection.update', (update) => {
         const { connection, lastDisconnect, qr } = update;
         
+        // 🟢 QR КОДТЫ ШЫҒАРУ (Render-ге сыюы үшін өте кішкентай форматта)
         if (qr) {
-            console.log('\n📱 ЖАҢА QR КОД ШЫҚТЫ (СУРЕТКЕ ТҮСІРІП СКАНИРЛЕҢІЗ):\n');
-            qrcode.generate(qr, { small: true });
+            console.log('\n=============================================');
+            console.log('📱 ТӨМЕНДЕГІ QR КОДТЫ СКАНЕРЛЕҢІЗ:');
+            console.log('=============================================\n');
+            qrcode.generate(qr, { small: true }); 
+            console.log('\n=============================================\n');
         }
 
         if (connection === 'close') {
-            const statusCode = lastDisconnect.error?.output?.statusCode;
+            const statusCode = lastDisconnect?.error?.output?.statusCode;
             const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+            
             console.log(`🔄 Байланыс үзілді (Код: ${statusCode}). Қайта қосылу: ${shouldReconnect}`);
-            if (shouldReconnect) setTimeout(connectToWhatsApp, 5000);
+            
+            if (shouldReconnect) {
+                setTimeout(connectToWhatsApp, 5000);
+            } else {
+                // 🔴 ЕГЕР БОТ ШЫҒЫП КЕТСЕ, СЕССИЯНЫ АВТОМАТТЫ ӨШІРЕДІ
+                console.log('❌ Аккаунттан шығып кетті! Сессия тазартылуда...');
+                fs.rmSync('./auth_info', { recursive: true, force: true });
+                console.log('✅ Сессия тазартылды! Бот қайта қосылады...');
+                setTimeout(connectToWhatsApp, 3000);
+            }
         } else if (connection === 'open') {
             console.log('\n✅ БОТ СӘТТІ ҚОСЫЛДЫ ЖӘНЕ ХАБАРЛАМА КҮТУДЕ!\n');
         }
