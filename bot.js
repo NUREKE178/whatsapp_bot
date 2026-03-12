@@ -64,7 +64,13 @@ async function connectToWhatsApp() {
             console.log('\n✅ БОТ СӘТТІ ҚОСЫЛДЫ! (100%)\n');
         }
     });
-
+    const sock = makeWASocket({
+        auth: state,
+        logger: pino({ level: 'silent' }),
+        printQRInTerminal: true, // 🔴 Мұны TRUE қылыңыз! (Жаңа версияда бұл қайта істейді)
+        browser: ['Ubuntu', 'Chrome', '20.0.04'], // 🔴 Осыны өзгертіңіз
+        syncFullHistory: false
+    });
     sock.ev.on('creds.update', saveCreds);
 
     // 📩 ХАБАРЛАМА ҚАБЫЛДАУ
