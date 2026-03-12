@@ -1,3 +1,4 @@
+const http = require('http');
 const { default: makeWASocket, DisconnectReason, useMultiFileAuthState } = require('@whiskeysockets/baileys');
 const pino = require('pino');
 const fs = require('fs');
@@ -266,3 +267,11 @@ ${clanText}
 }
 
 connectToWhatsApp();
+// Render-ді алдау үшін жалған сервер
+const server = http.createServer((req, res) => {
+    res.writeHead(200);
+    res.end('Bot is running!');
+});
+server.listen(process.env.PORT || 3000, () => {
+    console.log('Жалған сервер портта іске қосылды!');
+});
