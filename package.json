@@ -1,7 +1,7 @@
 {
-  "name": "whatsapp-bot",
+  "name": "whatsapp-bot-baileys",
   "version": "1.0.0",
-  "description": "Iris Bot Lightweight",
+  "description": "Iris Comfort Pro - Lightweight",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js"
