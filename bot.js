@@ -48,24 +48,18 @@ async function connectToWhatsApp() {
         
         if (qr) {
             console.log('\n=============================================');
-            console.log('📱 ТӨМЕНДЕГІ QR КОДТЫ СКАНЕРЛЕҢІЗ:');
+            console.log('⚠️ ЕГЕР QR СУРЕТ БОЛЫП ШЫҚПАСА, МЫНА КОДТЫ КӨШІРІП АЛЫҢЫЗ:');
+            console.log(qr); // Бұл ұзын әріптер тізбегін береді
             console.log('=============================================\n');
+            
+            // Сурет түрінде де шығаруға тырысамыз
             qrcode.generate(qr, { small: true }); 
-            console.log('\n=============================================\n');
         }
 
         if (connection === 'close') {
             const shouldReconnect = (lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut;
             console.log('🔄 Байланыс үзілді. Қайта қосылу:', shouldReconnect);
-            
-            if (shouldReconnect) {
-                setTimeout(connectToWhatsApp, 5000);
-            } else {
-                console.log('❌ Аккаунттан шығып кетті! Сессия тазартылуда...');
-                fs.rmSync('./auth_info', { recursive: true, force: true });
-                console.log('✅ Сессия тазартылды! Бот қайта қосылады...');
-                setTimeout(connectToWhatsApp, 3000);
-            }
+            if (shouldReconnect) setTimeout(connectToWhatsApp, 5000);
         } else if (connection === 'open') {
             console.log('\n✅ БОТ СӘТТІ ҚОСЫЛДЫ! (100%)\n');
         }
